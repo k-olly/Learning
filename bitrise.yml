@@ -1,0 +1,100 @@
+format_version: "12"
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: other
+app:
+  envs:
+  - kolly: meme
+    opts:
+      is_expand: false
+meta:
+  bitrise.io:
+    machine_type_id: g2-m1.4core
+    stack: osx-xcode-15.2.x
+trigger_map:
+- push_branch: main
+  workflow: deploy_to_staging
+- pull_request_source_branch: '*'
+  workflow: test
+workflows:
+  deploy_to_staging:
+    steps:
+    - git-clone@8: {}
+    - script@1:
+        inputs:
+        - script_file_path: null
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # make pipelines' return status equal the last command to exit with a non-zero status, or zero if all commands exit successfully
+            set -o pipefail
+            # debug log
+            set -x
+
+            echo deploying
+  primary:
+    steps:
+    - git-clone@8: {}
+    - script@1:
+        inputs:
+        - script_file_path: null
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # make pipelines' return status equal the last command to exit with a non-zero status, or zero if all commands exit successfully
+            set -o pipefail
+            # debug log
+            set -x
+
+            node Learning.js
+            touch meme
+            ls
+    - script@1:
+        inputs:
+        - script_file_path: null
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # make pipelines' return status equal the last command to exit with a non-zero status, or zero if all commands exit successfully
+            set -o pipefail
+            # debug log
+            set -x
+
+            env
+  test:
+    steps:
+    - git-clone@8: {}
+    - script@1:
+        inputs:
+        - script_file_path: null
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # make pipelines' return status equal the last command to exit with a non-zero status, or zero if all commands exit successfully
+            set -o pipefail
+            # debug log
+            set -x
+
+            echo testing
+    - script@1:
+        title: My new script step added from local WFE
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            set -e
+            # make pipelines' return status equal the last command to exit with a non-zero status, or zero if all commands exit successfully
+            set -o pipefail
+            # debug log
+            set -x
+
+            # write your script here
+            echo "Hello Szabi!"
+
+            # or run a script from your repository, like:
+            # bash ./path/to/script.sh
+            # not just bash, e.g.:
+            # ruby ./path/to/script.rb
